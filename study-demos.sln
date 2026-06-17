@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actors", "Actors", "{427466
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proto.Actor.Console1", "Proto.Actor.Console1\Proto.Actor.Console1.csproj", "{5C87B7F9-0843-4465-8669-07E173F7574E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIConsole2", "AIConsole2\AIConsole2.csproj", "{C5C5F3E5-329D-4F9A-A4C6-C8A03579F948}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{5C87B7F9-0843-4465-8669-07E173F7574E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C87B7F9-0843-4465-8669-07E173F7574E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C87B7F9-0843-4465-8669-07E173F7574E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C5F3E5-329D-4F9A-A4C6-C8A03579F948}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C5F3E5-329D-4F9A-A4C6-C8A03579F948}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C5F3E5-329D-4F9A-A4C6-C8A03579F948}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C5F3E5-329D-4F9A-A4C6-C8A03579F948}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
