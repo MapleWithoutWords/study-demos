@@ -1,58 +1,97 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
-class Program
+// ====== 配置区域 ======
+const string baseUrl = "https://token-plan-cn.xiaomimimo.com/v1/";
+const string apiKey = "tp-ctqrehoezox60yzmkcolsskgvxsajdduazi14i0aazu7zp26"; // 替换为你的 API Key
+const string model = "mimo-v2.5-pro"; // 替换为实际模型名称
+
+using var httpClient = new HttpClient();
+httpClient.BaseAddress = new Uri(baseUrl);
+httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+// 构建请求体
+var requestBody = new
 {
-    static async Task<int> Main(string[] args)
+    model = model,
+    messages = new[]
     {
-        // 从环境变量读取 API Key（也可以直接在代码中设置，但推荐使用环境变量）
-        var apiKey = Environment.GetEnvironmentVariable("XIAOMI_API_KEY") ?? "YOUR_API_KEY";
+        new { role = "system", content = "你是一个有帮助的AI助手。" },
+        new { role = "user", content = "你好，请介绍一下你自己。" }
+    },
+    temperature = 0.7,
+    max_tokens = 1024
+};
 
-        // TODO: 替换为小米模型的实际 HTTP API 端点
-        var endpoint = "https://api.example.mi.com/v1/models/your-model/invoke";
+var jsonOptions = new JsonSerializerOptions
+{
+    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+};
 
-        using var http = new HttpClient();
-        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+var jsonContent = JsonSerializer.Serialize(requestBody, jsonOptions);
+Console.WriteLine(">>> 请求内容:");
+Console.WriteLine(jsonContent);
+Console.WriteLine();
 
-        // 构建请求体（根据小米模型 API 要求调整字段名和结构）
-        var requestBody = new
-        {
-            // 如果 API 使用 "prompt" 或 "input"，请相应修改
-            prompt = "请用中文简短回答：介绍一下HTTP请求的基本概念。",
-            // 示例可选参数
-            max_tokens = 512,
-        };
+try
+{
+    var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+    var response = await httpClient.PostAsync("chat/completions", content);
 
-        var json = JsonSerializer.Serialize(requestBody);
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+    var responseBody = await response.Content.ReadAsStringAsync();
 
-        try
-        {
-            using var resp = await http.PostAsync(endpoint, content);
-            var respText = await resp.Content.ReadAsStringAsync();
-
-            if (resp.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Response:");
-                Console.WriteLine(respText);
-                return 0;
-            }
-            else
-            {
-                Console.WriteLine($"Request failed: {(int)resp.StatusCode} {resp.ReasonPhrase}");
-                Console.WriteLine(respText);
-                return 1;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error while calling model API:");
-            Console.WriteLine(ex.Message);
-            return 2;
-        }
+    if (!response.IsSuccessStatusCode)
+    {
+        Console.WriteLine($">>> 请求失败，状态码: {(int)response.StatusCode} {response.StatusCode}");
+        Console.WriteLine(responseBody);
+        return;
     }
+
+    // 解析响应
+    var chatResponse = JsonSerializer.Deserialize<ChatCompletionResponse>(responseBody, jsonOptions);
+    var assistantMessage = chatResponse?.Choices?.FirstOrDefault()?.Message?.Content;
+
+    Console.WriteLine(">>> 模型回复:");
+    Console.WriteLine(assistantMessage ?? "(无回复内容)");
+
+    Console.WriteLine();
+    Console.WriteLine($">>> Token 用量: prompt={chatResponse?.Usage?.PromptTokens}, " +
+                      $"completion={chatResponse?.Usage?.CompletionTokens}, " +
+                      $"total={chatResponse?.Usage?.TotalTokens}");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($">>> 请求异常: {ex.Message}");
+}
+
+// ====== 响应模型 ======
+public class ChatCompletionResponse
+{
+    public string? Id { get; set; }
+    public string? Model { get; set; }
+    public List<Choice>? Choices { get; set; }
+    public Usage? Usage { get; set; }
+}
+
+public class Choice
+{
+    public int Index { get; set; }
+    public Message? Message { get; set; }
+    public string? FinishReason { get; set; }
+}
+
+public class Message
+{
+    public string? Role { get; set; }
+    public string? Content { get; set; }
+}
+
+public class Usage
+{
+    public int PromptTokens { get; set; }
+    public int CompletionTokens { get; set; }
+    public int TotalTokens { get; set; }
 }
