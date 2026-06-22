@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.AI;
 using System.ClientModel;
+using System.Text.Json;
 
 IChatClient client =
-    new OpenAI.Chat.ChatClient("mimo-v2.5-pro", new ApiKeyCredential("tp-ctqrehoezox60yzmkcolsskgvxsajdduazi14i0aazu7zp26"), new OpenAI.OpenAIClientOptions { Endpoint = new Uri("https://token-plan-cn.xiaomimimo.com/v1/") })
+    new OpenAI.Chat.ChatClient("glm-5.1", new ApiKeyCredential("b1cc8a05c01a4dea99638a7111c14797.ECh52AZuMglnWiag"), new OpenAI.OpenAIClientOptions { Endpoint = new Uri("https://open.bigmodel.cn/api/paas/v4/") })
     .AsIChatClient();
 
 List<ChatMessage> chatMessages =
@@ -36,10 +37,22 @@ while (true)
         var fullResponse = "";
         await foreach (var update in client.GetStreamingResponseAsync(chatMessages))
         {
-            if (update.Text is not null)
+            foreach (var item in update.Contents)
             {
-                Console.Write(update.Text);
-                fullResponse += update.Text;
+                if (item is TextReasoningContent textReasoning)
+                {
+                    Console.Write(textReasoning.Text);
+                }
+                else if (item is TextContent text)
+                {
+                    Console.Write(text.Text);
+                    fullResponse += text.Text;
+                }
+                else if (item is UsageContent  usageContent)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine(JsonSerializer.Serialize(usageContent.Details));
+                }
             }
         }
 
