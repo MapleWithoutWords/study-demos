@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIMemoryConsole2", "AIMemor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIVectorMemeoryStoreConsole3", "AIVectorMemeoryStoreConsole3\AIVectorMemeoryStoreConsole3.csproj", "{107A692E-BC4B-493D-A892-C1EBDA4F4DDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIFunctionCallingConsole4", "AIFunctionCallingConsole4\AIFunctionCallingConsole4.csproj", "{99A7C0F4-91B3-4799-860C-9145ABEC91DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{107A692E-BC4B-493D-A892-C1EBDA4F4DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{107A692E-BC4B-493D-A892-C1EBDA4F4DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{107A692E-BC4B-493D-A892-C1EBDA4F4DDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99A7C0F4-91B3-4799-860C-9145ABEC91DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A7C0F4-91B3-4799-860C-9145ABEC91DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A7C0F4-91B3-4799-860C-9145ABEC91DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A7C0F4-91B3-4799-860C-9145ABEC91DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
