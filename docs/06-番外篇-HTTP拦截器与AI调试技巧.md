@@ -4,7 +4,10 @@
 
 ## 引言
 
-在前面的系列文章中，我们多次提到"通过HTTP拦截器查看底层通信"。这个能力在AI开发中**极其重要**——因为AI SDK的高度封装虽然让代码更简洁，但也隐藏了大量关键信息：
+> 本文完整代码在 `AI.Common` 项目中，克隆仓库后可直接查看和使用。
+> 项目地址：https://github.com/MapleWithoutWords/AIStudyDemos
+
+在前面的系列文章中，我们多次提到“通过HTTP拦截器查看底层通信”。这个能力在AI开发中**极其重要**——因为AI SDK的高度封装虽然让代码更简洁，但也隐藏了大量关键信息：
 
 - 模型到底收到了什么内容？
 - Function Calling的请求和响应长什么样？
@@ -309,3 +312,5 @@ HTTP拦截器虽然是一个"辅助工具"，但在AI开发中它的重要性不
 > 完整代码见项目：
 > - [AI.Common/HttpClientInterceptor.cs](../AI.Common/HttpClientInterceptor.cs)
 > - [AI.Common/LoggingDelegatingHandler.cs](../AI.Common/LoggingDelegatingHandler.cs)
+>
+> 项目地址：https://github.com/MapleWithoutWords/AIStudyDemos

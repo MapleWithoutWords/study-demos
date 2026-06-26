@@ -163,9 +163,20 @@ messages = [
 
 后面几篇文章，我们将逐一解决这些局限——通过**记忆系统**解决知识遗忘，通过**Function Calling**让AI学会调用工具，通过**MCP协议**让AI接入工具生态。
 
+## 环境准备
+
+理论讲完了，接下来进入实战。在开始之前，你需要：
+
+1. 去 https://open.bigmodel.cn/ 注册一个智谱AI账号，注册后会免费送一些Token，拿到你的API Key和接口地址
+2. 克隆本项目代码：https://github.com/MapleWithoutWords/AIStudyDemos
+
+> 智谱提供OpenAI兼容协议接口，你也可以换成其他兼容的服务商（如DeepSeek、月之暗面等），只需修改`baseUrl`和`apiKey`即可。
+
 ## 动手实践：用C#调用大模型
 
-理解了大模型的本质和API结构，接下来我们动手写代码。在C#中有两种方式调用大模型：
+环境准备就绪，打开项目中的 `AICallConsole1` 项目，配置好你的API Key后直接运行即可体验效果。下面我们来看看代码里做了什么。
+
+C#中有两种方式调用大模型：
 
 ### 方式一：HttpClient直接调用——看透本质
 
@@ -316,29 +327,6 @@ await foreach (var update in client.GetStreamingResponseAsync(chatMessages))
 
 流式输出的体验远优于等待完整响应——用户几乎可以**实时**看到AI的回答。
 
-## 配置管理：安全存储API Key
-
-**永远不要**把API Key硬编码或提交到Git。我们使用.NET的UserSecrets机制：
-
-```csharp
-var configuration = new ConfigurationBuilder()
-    .AddUserSecrets(typeof(AICommon).Assembly)
-    .Build();
-
-string baseUrl = configuration.GetSection("AIEndpoint").Value!;
-string apiKey = configuration.GetSection("AIApiKey").Value!;
-```
-
-设置方式：
-
-```bash
-dotnet user-secrets init --project AI.Common/AI.Common.csproj
-dotnet user-secrets set "AIEndpoint" "https://open.bigmodel.cn/api/paas/v4/" --project AI.Common/AI.Common.csproj
-dotnet user-secrets set "AIApiKey" "your-api-key-here" --project AI.Common/AI.Common.csproj
-```
-
-UserSecrets存储在用户目录下，不会被Git追踪，是开发阶段管理密钥的最佳实践。
-
 ## 核心架构一览
 
 ```
@@ -363,10 +351,10 @@ IChatClient.GetStreamingResponseAsync()
 2. **对话API的组成**：model + messages（system/user/assistant） + 控制参数
 3. **Token的概念**：大模型处理文本的基本单位，直接影响成本和速度
 4. **大模型的能力与局限**：能做问答、创作、翻译、推理，但无法联网、无法执行、有知识截止
-5. **两种调用方式**：HttpClient裸调 vs SDK封装，前者帮助理解原理，后者用于生产
-6. **`Microsoft.Extensions.AI`** 统一抽象层，一套代码兼容多个模型服务商
-7. **流式输出**的实现细节和三种内容类型的区分
-8. **安全配置** API Key的最佳实践
+5. **环境准备**：使用智谱AI服务商，通过UserSecrets安全管理API Key
+6. **两种调用方式**：HttpClient裸调 vs SDK封装，前者帮助理解原理，后者用于生产
+7. **`Microsoft.Extensions.AI`** 统一抽象层，一套代码兼容多个模型服务商
+8. **流式输出**的实现细节和三种内容类型的区分
 
 大模型本身是无状态的、无法联网的、不能执行操作的——但别担心，这正是我们后面几篇文章要解决的问题。
 
@@ -375,3 +363,5 @@ IChatClient.GetStreamingResponseAsync()
 ---
 
 > 完整代码见项目：[AICallConsole1/Program.cs](../AICallConsole1/Program.cs)
+>
+> 项目地址：https://github.com/MapleWithoutWords/AIStudyDemos

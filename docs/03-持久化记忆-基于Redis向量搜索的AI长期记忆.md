@@ -4,24 +4,16 @@
 
 ## 引言
 
+> 本文完整代码在 `AIVectorMemeoryStoreConsole3` 项目中，克隆仓库后配置好API Key和Redis环境直接运行即可体验效果。
+> 项目地址：https://github.com/MapleWithoutWords/AIStudyDemos
+
 上一篇文章中，我们用内存向量 + 余弦相似度实现了智能的上下文检索。但问题也随之而来：
 
 - 程序一重启，所有记忆丢失
 - 无法跨会话共享记忆（比如不同终端、不同用户）
 - 内存存储量有限，不适合大规模应用
 
-解决方案：**把向量存到支持向量搜索的数据库中**。本文我们选择Redis——因为它轻量、快速，并且通过Redis Stack的RediSearch模块原生支持向量搜索。
-
-## 为什么选择Redis？
-
-| 方案 | 优点 | 缺点 |
-|------|------|------|
-| **Redis + RediSearch** | 轻量、快速、部署简单 | 内存存储，容量受限 |
-| **Qdrant** | 专业向量数据库 | 需要单独部署 |
-| **Milvus** | 大规模场景 | 部署复杂 |
-| **pgvector** | 与PostgreSQL集成 | 性能略逊专用方案 |
-
-对于Demo和学习场景，Redis是最佳选择——够用、够快、够简单。
+解决方案：**把向量存到支持向量搜索的数据库中**。本文以Redis为例演示整个流程，实际生产中不一定要选Redis，可以根据你的场景选择合适的向量数据库（如Qdrant、Milvus、pgvector等）。
 
 ## 环境准备
 
@@ -32,16 +24,6 @@
 ```bash
 docker run -d --name redis-stack -p 6379:6379 redis/redis-stack:latest
 ```
-
-### NuGet依赖
-
-```xml
-<PackageReference Include="StackExchange.Redis" />
-<PackageReference Include="NRedisStack" />
-```
-
-- `StackExchange.Redis`：Redis连接库
-- `NRedisStack`：提供RediSearch的高级API（包括向量搜索）
 
 ## 数据模型设计
 
@@ -358,3 +340,5 @@ if (userInput.Equals("clear", StringComparison.OrdinalIgnoreCase))
 > - [AIVectorMemeoryStoreConsole3/Program.cs](../AIVectorMemeoryStoreConsole3/Program.cs)
 > - [AIVectorMemeoryStoreConsole3/RedisVectorStore.cs](../AIVectorMemeoryStoreConsole3/RedisVectorStore.cs)
 > - [AIVectorMemeoryStoreConsole3/VectorModel.cs](../AIVectorMemeoryStoreConsole3/VectorModel.cs)
+>
+> 项目地址：https://github.com/MapleWithoutWords/AIStudyDemos

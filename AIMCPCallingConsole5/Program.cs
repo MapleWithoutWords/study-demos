@@ -25,8 +25,9 @@ IChatClient client =
 var config = new StdioClientTransport(
     new StdioClientTransportOptions()
     {
-        Command = "dnx",
-        Arguments = ["NuGet.Mcp.Server", "--source", "https://api.nuget.org/v3/index.json", "--yes"]
+        //Command = "dnx",
+        //Arguments = ["NuGet.Mcp.Server", "--source", "https://api.nuget.org/v3/index.json", "--yes"]
+        Command = "D:\\OpenSource\\AIStudyDemos\\AIMcpServerDemo\\publish\\AIMcpServerDemo.exe"
     }
 );
 

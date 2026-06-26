@@ -1,0 +1,10 @@
+{
+  "inputs": [],
+  "servers": {
+    "MyMcpServer": {
+      "type": "http",
+      "url": "http://localhost:6278",
+      "headers": {}
+    }
+  }
+}

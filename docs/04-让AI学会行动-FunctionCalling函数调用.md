@@ -4,6 +4,9 @@
 
 ## 引言
 
+> 本文完整代码在 `AIFunctionCallingConsole4` 项目中，克隆仓库后配置好API Key直接运行即可体验效果。
+> 项目地址：https://github.com/MapleWithoutWords/AIStudyDemos
+
 前三篇文章让我们的AI拥有了对话能力和记忆力。但有一个根本性的局限：**AI只能基于训练数据回答问题，它无法获取实时信息，也无法执行任何操作**。
 
 比如你问AI："今天广州天气怎么样？"，它只能抱歉地回答："我无法获取实时天气信息。"
@@ -163,7 +166,13 @@ while (true)
 
 ## 透视Function Calling的底层通信
 
-使用HTTP拦截器（见番外篇），我们可以看到Function Calling实际经历了**两次**API请求：
+项目中提供了一个基于[HarmonyLib](https://harmony.pardeike.net/)的HTTP拦截器，它通过Hook `HttpClient`的构造函数，自动在所有HTTP请求中注入日志记录，无需修改业务代码。使用方式很简单，在代码入口加一行：
+
+```csharp
+HttpClientInterceptor.StartInterception();
+```
+
+开启后你就能在控制台看到Function Calling的完整请求和响应报文（详见[06-番外篇](./06-番外篇-HTTP拦截器与AI调试技巧.md)）。下面我们来看看Function Calling实际经历了**两次**API请求：
 
 ### 第一次请求：模型决策
 
@@ -327,3 +336,5 @@ Function Calling是构建**AI Agent**的基石。Agent = LLM + Memory + Tools。
 ---
 
 > 完整代码见项目：[AIFunctionCallingConsole4/Program.cs](../AIFunctionCallingConsole4/Program.cs)
+>
+> 项目地址：https://github.com/MapleWithoutWords/AIStudyDemos
