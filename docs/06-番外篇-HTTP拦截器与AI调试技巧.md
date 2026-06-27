@@ -167,7 +167,37 @@ internal static LoggingDelegatingHandler CreateHandler(HttpMessageHandler? inner
 
 ### 使用方法
 
-在任何Demo的入口调用一行即可：
+`LoggingDelegatingHandler`有两种使用方式，适用场景截然不同：
+
+#### 方式一：手动注入（单个HttpClient实例）
+
+```csharp
+var client = new HttpClient(new LoggingDelegatingHandler());
+```
+
+这种方式只会拦截**你手动创建的这一个HttpClient实例**。优点是使用简单、作用域明确；缺点是**无法拦截SDK内部创建的HttpClient**——而AI SDK（如OpenAI SDK、MCP Client）在内部会自行创建HttpClient，你根本拿不到它们的实例。
+
+#### 方式二：HarmonyLib全局Hook（所有HttpClient实例）
+
+```csharp
+HttpClientInterceptor.StartInterception();
+```
+
+这种方式通过Hook `HttpClient`的构造函数，**自动拦截之后创建的所有HttpClient实例**，包括SDK内部创建的。这正是本项目采用的方式——只需在程序入口调用一行，就能捕获AI SDK发出的每一个HTTP请求。
+
+#### 两种方式对比
+
+| 维度 | 手动注入 | HarmonyLib全局Hook |
+|------|---------|-------------------|
+| **拦截范围** | 仅指定的HttpClient实例 | 所有HttpClient实例 |
+| **能否拦截SDK内部请求** | ❌ 不能 | ✅ 能 |
+| **使用复杂度** | 简单，一行代码 | 需要HarmonyLib依赖 |
+| **适用场景** | 自己控制的HttpClient | 调试AI SDK、第三方库的内部请求 |
+| **侵入性** | 低，不修改全局行为 | 高，影响所有HttpClient |
+
+> **本项目选择全局Hook的原因**：AI SDK（OpenAI SDK、MCP Client等）在内部创建HttpClient，我们无法手动给它们注入Handler。只有通过HarmonyLib Hook构造函数，才能在不修改SDK代码的前提下拦截所有请求。
+
+在任何Demo的入口调用一行即可开启全局拦截：
 
 ```csharp
 HttpClientInterceptor.StartInterception();

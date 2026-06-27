@@ -22,14 +22,11 @@ IChatClient client =
 
 // 配置传输选项
 
-var config = new StdioClientTransport(
-    new StdioClientTransportOptions()
-    {
-        //Command = "dnx",
-        //Arguments = ["NuGet.Mcp.Server", "--source", "https://api.nuget.org/v3/index.json", "--yes"]
-        Command = "D:\\OpenSource\\AIStudyDemos\\AIMcpServerDemo\\publish\\AIMcpServerDemo.exe"
-    }
-);
+var config = new HttpClientTransport(new HttpClientTransportOptions
+{
+    Endpoint= new Uri("http://localhost:5144/mcp"),
+     TransportMode= HttpTransportMode.AutoDetect,
+});
 
 // 创建 MCP 客户端实例
 var mcpClient = await McpClient.CreateAsync(config);
